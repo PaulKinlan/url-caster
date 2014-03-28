@@ -1,0 +1,68 @@
+<html>
+  <head>
+    
+    <script>
+    
+    var resolveScan = function(successCallback) {
+      var resolveQuery = document.getElementById("resolvequery");
+      successCallback = successCallback || function() {};
+      
+      var request = new XMLHttpRequest();
+      
+      request.onreadystatechange = function(e) {
+        if(request.readyState == 4 && request.status == 200) {
+          successCallback(JSON.parse(request.responseText));
+        }
+      };
+      
+      request.open("POST", "/resolve-scan");
+      request.send(resolveQuery.value);
+    };
+    
+    window.onload = function() {
+      var resolveScanButton = document.getElementById("resolveScanButton");
+      var resolveResponseOutput = document.getElementById("resolveResponse");
+      resolveScanButton.onclick = function() {
+        resolveScan(function(data) {
+          resolveResponseOutput.innerText = JSON.stringify(data);
+        });  
+      };
+    };
+    </script>
+    
+  </head>
+  <body>
+    <h1>Device List</h1>
+    
+    <h2>/resolve-scan</h2>
+    <h3>Request Data</h3>
+    <textarea id="resolvequery" cols=40 style="width: 400px; height: 200px;">{
+  "location": {
+    "lat": 49.129837,
+    "lon": 120.38142
+  },
+  "objects": [{
+      "url": "http://example.com",
+      "rssi": -93
+    }, 
+    {
+      "url": "http://json.org/iot/3",
+      "rssi": -50
+    },
+    {
+      "id": "OLP-425",
+      "rssi": -60
+  }]
+}</textarea>
+    <h3>Request Data</h3>
+    <pre id="resolveResponse"></pre>
+    <button id="resolveScanButton">Run</button>
+    
+    <h2>Add Device</h2>
+    <form action="/add-device" method="POST">
+      <label for="name">Name </label><input type="text" id="name" name="name">
+      <label for="url">Url</label><input type="utl" id="url" name="url">
+      <input type="submit" value="Add">
+    </form>
+  </body>
+</html>
