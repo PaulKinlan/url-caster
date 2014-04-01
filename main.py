@@ -89,7 +89,8 @@ class ResolveScan(webapp2.RequestHandler):
             }
             
             if device.url is not None:
-                #FetchAndStoreUrl(device.url)
+                # Really we want all this to be async
+                FetchAndStoreUrl(device.url)
                
                 # Really if we don't have the data we should not return it.
                 siteInfo = SiteInformation.get_by_id(device.url)
@@ -97,6 +98,8 @@ class ResolveScan(webapp2.RequestHandler):
                 if siteInfo is not None:
                     device_data["url"] = siteInfo.url 
                     device_data["title"] = siteInfo.title
+                    device_data["description"] = siteInfo.description
+                    device_data["icon"] = siteInfo.favicon_url
                 else:
                     device_data["url"] = device.url
                         
@@ -143,9 +146,12 @@ def FetchAndStoreUrl(url):
         if icon_search:
             icon = icon_search.group(1)
         
-        SiteInformation.get_or_insert(url, url = url, title = title, description = description, content = result.content)
+        SiteInformation.get_or_insert(url, url = url, 
+            title = title, 
+            favicon_url = icon, 
+            description = description, 
+            content = result.content)
 
-        
 class Index(webapp2.RequestHandler):
     def get(self):
         self.response.out.write("")
