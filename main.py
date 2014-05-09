@@ -142,9 +142,17 @@ def FetchAndStoreUrl(url):
         if description_search:
             description = description_search.group(1)
         
-        icon_search = re.search('<link rel="shortcut icon" src="([^\"]+)', result.content)
+        icon_search = 
+            re.search('<link rel="shortcut icon"([^>]+)href="([^\"]+)', result.content) or
+            re.search("<link rel='shortcut icon'([^>]+)href='([^\']+)", result.content) or
+            re.search('<link rel="icon"([^>]+)href="([^\"]+)', result.content) or
+            re.search("<link rel='icon'([^>]+)href='([^\']+)", result.content) or
+            re.search('<link rel="apple-touch-icon"([^>]+)href=([^\"]+)', result.content) or
+            re.search("<link rel='apple-touch-icon'([^>]+)href=([^\']+)", result.content) or
+        
         if icon_search:
-            icon = icon_search.group(1)
+            icon = icon_search.group(2)
+
         
         SiteInformation.get_or_insert(url, url = url, 
             title = title, 
