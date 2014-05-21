@@ -146,7 +146,8 @@ def FetchAndStoreUrl(siteInfo, url):
 
         
         if siteInfo is None:
-            siteInfo = SiteInformation.get_or_insert(url, url = url, 
+            siteInfo = SiteInformation.get_or_insert(url, 
+                url = final_url, 
                 title = title, 
                 favicon_url = icon, 
                 description = description, 
