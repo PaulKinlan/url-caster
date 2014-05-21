@@ -124,6 +124,7 @@ def FetchAndStoreUrl(siteInfo, url):
     if result.status_code == 200:
         title = ""
         description = ""
+        final_url = url
         icon = "/favicon.ico"
         # parse the content
         title_search = re.search('<title>(.+)</title>', result.content)
@@ -143,6 +144,8 @@ def FetchAndStoreUrl(siteInfo, url):
         
         if icon_search:
             icon = icon_search.group(2)
+            if icon[0:4] != "http":
+                icon = final_url + icon
 
         
         if siteInfo is None:
