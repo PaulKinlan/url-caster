@@ -126,7 +126,7 @@ def FetchAndStoreUrl(siteInfo, url):
     if result.status_code == 200:
         title = ""
         description = ""
-        final_url = result.final_url || url
+        final_url = result.final_url or url
         icon = "/favicon.ico"
         # parse the content
         title_search = re.search('<title>(.+)</title>', result.content)
