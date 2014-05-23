@@ -157,6 +157,11 @@ def FetchAndStoreUrl(siteInfo, url):
                 content = result.content)
         else:
             # update the data because it already exists
+            siteInfo.url = final_url
+            siteInfo.title = title
+            siteInfo.favicon_url = icon
+            siteInfo.description = description
+            siteInfo.content = result.content
             siteInfo.put()
 
     return siteInfo
