@@ -126,7 +126,7 @@ def FetchAndStoreUrl(siteInfo, url):
     if result.status_code == 200:
         title = ""
         description = ""
-        final_url = url
+        final_url = result.final_url
         icon = "/favicon.ico"
         # parse the content
         title_search = re.search('<title>(.+)</title>', result.content)
@@ -144,15 +144,13 @@ def FetchAndStoreUrl(siteInfo, url):
             re.search('<link rel="apple-touch-icon"([^>]+)href=([^\"]+)', result.content) or \
             re.search("<link rel='apple-touch-icon'([^>]+)href=([^\']+)", result.content)
         
-        logging.info(icon_search)
-
         if icon_search:
             icon = icon_search.group(2)
-            logging.info(icon)
 
             if icon[0:4] != "http":
                 icon = urljoin(final_url, icon)
 
+        logging.info("final url %s" % final_url)
         
         if siteInfo is None:
             siteInfo = SiteInformation.get_or_insert(url, 
