@@ -20,6 +20,8 @@ import logging
 from datetime import datetime, timedelta
 from google.appengine.ext import ndb
 from google.appengine.api import urlfetch
+from urlparse import urljoin
+import os
 import re
 
 
@@ -137,15 +139,19 @@ def FetchAndStoreUrl(siteInfo, url):
         
         icon_search = re.search('<link rel="shortcut icon"([^>]+)href="([^\"]+)', result.content) or \
             re.search("<link rel='shortcut icon'([^>]+)href='([^\']+)", result.content) or \
-            re.search('<link rel="icon"([^>]+)href="([^\"]+)', result.content) or \
-            re.search("<link rel='icon'([^>]+)href='([^\']+)", result.content) or \
+            re.search('<link rel="icon"([^>]+)href="([^\"]+)"', result.content) or \
+            re.search("<link rel='icon'([^>]+)href='([^\']+)'", result.content) or \
             re.search('<link rel="apple-touch-icon"([^>]+)href=([^\"]+)', result.content) or \
             re.search("<link rel='apple-touch-icon'([^>]+)href=([^\']+)", result.content)
         
+        logging.info(icon_search)
+
         if icon_search:
             icon = icon_search.group(2)
+            logging.info(icon)
+
             if icon[0:4] != "http":
-                icon = final_url + icon
+                icon = urljoin(final_url, icon)
 
         
         if siteInfo is None:
