@@ -127,7 +127,7 @@ def FetchAndStoreUrl(siteInfo, url):
         title = ""
         description = ""
         final_url = result.final_url or url
-        icon = "/favicon.ico"
+        icon = urljoin(final_url, "/favicon.ico")
         # parse the content
         title_search = re.search('<title>(.+)</title>', result.content)
         description_search = re.search('<meta name="description" content="([^\"]+)', result.content)
